@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui-bridge
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: ui-bridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui-bridge
+  template:
+    metadata:
+      labels:
+        app: ui-bridge
+    spec:
+      serviceAccountName: {{ include "kubernetes-ui-bridge.serviceAccountName" . }}
+      containers:
+      - name: ui-bridge
+        image: quay.io/openshift/origin-console:4.14
+        ports:
+          - name: http
+            containerPort: 9000
